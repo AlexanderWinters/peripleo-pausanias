@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import CETEI from 'CETEIcean';
 import Switch from 'react-switch';
 import { useSearch } from '../../peripleo/state';
 import { TEITextView } from './TEITextView';
 import { SectionNavigator } from './SectionNavigator';
+import { Item, PlaceReference } from '../../peripleo/Types';
 
 import './TEIView.css';
 
@@ -25,6 +26,35 @@ const addClass = (id: string, cls: string) => {
     elem.classList.add(cls);
 }
 
+
+
+const transformPlaceElements = (elements: Element[]): Item<PlaceReference>[] => {
+  return elements.map(el => ({
+    id: el.getAttribute('xml:id') || '',
+    type: 'Annotation',
+    target: {
+      type: 'Dataset',
+      value: {
+        title: el.textContent || '',
+        ana: el.getAttribute('ana') || '',
+        type: el.getAttribute('type') || ''
+      }
+    },
+    body: {
+      type: 'Dataset',
+      value: [{ id: el.getAttribute('xml:id') || '' }]
+    },
+    properties: {
+      title: el.textContent || '',
+      ana: el.getAttribute('ana') || '',
+      type: el.getAttribute('type') || ''
+    },
+    element: el
+  }));
+};
+
+
+
 // Shorthand
 const deselect = (root: Element) => {
   root.querySelectorAll('.p6o-tei-selected').forEach(elem => {
@@ -41,7 +71,8 @@ export const TEIView = (props: TEIViewProps) => {
 
   const [tei, setTEI] = useState<Element>(null);
 
-  const [inViewport, setInViewport] = useState<Element[]>([]);
+
+  const [inViewport, setInViewport] = useState<Item<PlaceReference>[]>([]);
 
   useEffect(() => {
     const CETEIcean = new CETEI();
@@ -52,15 +83,20 @@ export const TEIView = (props: TEIViewProps) => {
     });
   }, []);
 
-  const onViewportChange = (placenames: Element[]) =>
-    setInViewport(placenames);
+
+  const onViewportChange = useCallback((placenames: Element[]) => {
+    setInViewport(transformPlaceElements(placenames));
+  }, [])
+
+
 
   useEffect(() => {
     if (showAll) {
       if (getFilter('visible-waypoints'))
         clearFilter('visible-waypoints');
     } else {
-      const ids = inViewport.map(el => el.getAttribute('xml:id'));
+      const ids = inViewport.map(item => item.id);
+
       setFilter({ name: 'visible-waypoints', value: ids });
     }
   }, [inViewport, showAll]);
@@ -73,7 +109,7 @@ export const TEIView = (props: TEIViewProps) => {
         <div className="p6o-teiview-mode-switch">
           <span>Map all places</span>
 
-          <Switch 
+          <Switch
             height={18}
             width={34}
             onColor="#ced0d1"
@@ -86,7 +122,7 @@ export const TEIView = (props: TEIViewProps) => {
         </div>
       </header>
 
-      <TEITextView 
+      <TEITextView
         tei={tei}
         onViewportChange={onViewportChange} />
 

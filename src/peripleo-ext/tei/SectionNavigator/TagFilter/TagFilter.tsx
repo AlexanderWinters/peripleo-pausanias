@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { PushPinSimple } from '@phosphor-icons/react';
 import { useSearch } from '../../../../peripleo/state';
 import { MoreTags } from './MoreTags';
-
+import type { Item, PlaceReference } from '../../../../peripleo';
 import './TagFilter.css';
 
 interface TagFilterProps {
 
-  placesInViewport: Element[];
+  placesInViewport: Item<PlaceReference>[];
+
 
 }
 
@@ -26,10 +27,9 @@ const getUniqueSortedByOccurrences = (arr: string[]) => {
 }
 
 export const TagFilter = (props: TagFilterProps) => {
-
   const { clearFilter, setFilter } = useSearch();
-
   const [pinned, setPinned] = useState<string | undefined>();
+
 
   const togglePin = (tag: string) => {
     if (pinned === tag) {
@@ -51,16 +51,11 @@ export const TagFilter = (props: TagFilterProps) => {
     }
   }
 
-  const tags = props.placesInViewport.reduce((tags, placeName) => {
-    const ana = placeName
-      .getAttribute('ana')
-      .trim()
-      .split('#')
-      .filter(str => str) // Filter first empty string
-      .map(str => `#${str}`.trim());
-
-    return [...tags, ...ana];
+  const tags = props.placesInViewport.reduce((tags, place) => {
+    const placeTags = place.properties.tags || [];
+    return [...tags, ...placeTags.map(tag => `#${tag}`)];
   }, [] as string[]);
+
 
   const unique = getUniqueSortedByOccurrences(tags);
 
