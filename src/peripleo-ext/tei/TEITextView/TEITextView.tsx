@@ -55,11 +55,8 @@ export const TEITextView = (props: TEITextViewProps) => {
 
   // Debounce viewport scroll event
   useEffect(() => {
-    if (visible.length > 0) {
-      props.onViewportChange(visible);
-    }
-  }, [visible]);
-
+    props.onViewportChange(visible);
+  }, [visible, props.onViewportChange]);
 
   // Selection changed
   useEffect(() => {

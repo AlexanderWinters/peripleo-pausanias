@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { PushPinSimple } from '@phosphor-icons/react';
 import { useSearch } from '../../../../peripleo/state';
 import { MoreTags } from './MoreTags';
-import type { Item, PlaceReference } from '../../../../peripleo';
+
 import './TagFilter.css';
 
 interface TagFilterProps {
 
-  placesInViewport: Item<PlaceReference>[];
-
+  placesInViewport: Element[];
 
 }
 
@@ -27,9 +26,10 @@ const getUniqueSortedByOccurrences = (arr: string[]) => {
 }
 
 export const TagFilter = (props: TagFilterProps) => {
-  const { clearFilter, setFilter } = useSearch();
-  const [pinned, setPinned] = useState<string | undefined>();
 
+  const { clearFilter, setFilter } = useSearch();
+
+  const [pinned, setPinned] = useState<string | undefined>();
 
   const togglePin = (tag: string) => {
     if (pinned === tag) {
@@ -51,11 +51,19 @@ export const TagFilter = (props: TagFilterProps) => {
     }
   }
 
-  const tags = props.placesInViewport.reduce((tags, place) => {
-    const placeTags = place.properties.tags || [];
-    return [...tags, ...placeTags.map(tag => `#${tag}`)];
-  }, [] as string[]);
+  const tags = props.placesInViewport.reduce((tags, placeName) => {
+    const anaAttr = placeName.getAttribute('ana');
 
+    if (!anaAttr) return tags; // Skip elements without 'ana' attribute
+
+    const ana = anaAttr
+        .trim()
+        .split('#')
+        .filter(str => str) // Filter first empty string
+        .map(str => `#${str}`.trim());
+
+    return [...tags, ...ana];
+  }, [] as string[]);
 
   const unique = getUniqueSortedByOccurrences(tags);
 

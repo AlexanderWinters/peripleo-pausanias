@@ -54,36 +54,36 @@ export interface Place extends Feature {
 
 }
 
-export interface PlaceReference {
-  title: string;
-  tags?: string[];
-  ana?: string;
-  type?: string;
-}
-
-
-
 export interface Trace<T extends unknown> {
+
   id: string;
+
   items: Item<T>[];
 
 }
 
 export interface Item<T extends unknown> {
+
   id: string;
+
   type: 'Annotation';
+
   target: {
+
     type: 'Dataset';
+
     value: T;
 
   }
 
   body:  {
+
     type: 'Dataset';
+
     value: { id: string }[];
+    
   }
-  properties: T;
-  element?: Element;
+
 }
 
 export interface Store<T extends unknown> {

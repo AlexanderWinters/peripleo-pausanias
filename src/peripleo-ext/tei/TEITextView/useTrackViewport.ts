@@ -23,6 +23,9 @@ export const useTrackViewport = <T extends Element>(props: UseInViewProps) => {
   const startTracking = (targets: Element[]) => {
 
     const onIntersect = (entries: IntersectionObserverEntry[]) => {
+
+      if (!ref.current || !ref.current.parentElement) return;
+
       // Split entries into entered vs. left 
       const entriesEntered = entries.filter(e => e.isIntersecting);
       const entriesLeft = entries.filter(e => !e.isIntersecting);
