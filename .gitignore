@@ -2,3 +2,5 @@
 dist/
 node_modules/
 data-utilities/**/*.lp.json
+.venv
+.idea
