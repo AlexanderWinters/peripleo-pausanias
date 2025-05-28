@@ -1,0 +1,29 @@
+
+.book-selector label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.book-selector-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.book-selector {
+    background-color: white;
+    padding: 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+}
+
+.book-selector select {
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    font-size: 14px;
+}
