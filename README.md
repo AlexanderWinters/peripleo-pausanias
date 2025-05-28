@@ -58,34 +58,6 @@ The config is loaded at runtime by the `useConfig` hook in `src/Config.ts`.
 
 ---
 
-## Configuration
-
-The main configuration is in `docs/config.json`:
-
-```json
-{
-  "map": "https://api.maptiler.com/maps/basic-v2-light/style.json?key=...",
-  "gazetteer": "pleiades-all-located-places.lp.json",
-  "tei": {
-    "name": "Pausanias Book 1",
-    "url": "pausanias-book1.tei.xml"
-  },
-  "layers": [{
-    "name": "ASCSA Monuments",
-    "url": "ascsa-monuments-places.lp.json"
-  }]
-}
-```
-
-- **map**: URL to the map style (MapLibre/MapTiler).
-- **gazetteer**: Path to the main places GeoJSON.
-- **tei**: The TEI file to display, with a name and URL.
-- **layers**: Additional data layers to show on the map.
-
-The config is loaded at runtime by the `useConfig` hook in `src/Config.ts`.
-
----
-
 ## Core Concepts
 
 ### 1. **TEI Texts**
