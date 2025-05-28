@@ -5,12 +5,12 @@ export default defineConfig(({ command, mode }) => ({
   base: '',
   plugins: [ react() ],
   server: {
-    open: 'public/index.html'
+    open: 'index.html'
   },
   build: {
     rollupOptions: {
       input: {
-        app: 'public/index.html',
+        app: 'index.html',
       },
       output: {
         manualChunks: {
